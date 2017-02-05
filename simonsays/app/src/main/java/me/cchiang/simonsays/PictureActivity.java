@@ -71,7 +71,7 @@ public class PictureActivity extends AppCompatActivity {
     private TextView head;
     private TextView tagText, checkText;
     private ArrayList<String> tags = new ArrayList<>();
-    private ArrayList<StringBuilder> checkList = MainActivity.list;
+    private ArrayList<String> checkList = MainActivity.list;
 
     private final ClarifaiClient clarifaiClient = new ClarifaiBuilder(Credential.CLIENT_ID,
             Credential.CLIENT_SECRET).buildSync();
@@ -177,10 +177,15 @@ public class PictureActivity extends AppCompatActivity {
             results += "\n" + tags.get(i);
         }
         tagText.setText(results);
+    }
 
-        String looking = "Need: ";
-        for(int j = 0; j < checkList.size(); j++){
-            looking += "\n" + checkList.get(j);
+    public void checkMatch(){
+        String looking = "You got: ";
+
+        for(int i = 0; i < 10; i++) {
+            if(checkList.contains(tags.get(i))){
+                looking += "\n" + tags.get(i);
+            }
         }
         checkText.setText(looking);
     }
@@ -231,6 +236,7 @@ public class PictureActivity extends AppCompatActivity {
                         tags.add(predictedTags.get(i).name());
                     }
                     printTags();
+                    checkMatch();
                 }
             }.execute(bitmap);
         }

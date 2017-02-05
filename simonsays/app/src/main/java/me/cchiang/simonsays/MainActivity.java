@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean CAN_READ_EXTERNAL_STORAGE = false;
 
     private static int count = 0;
-    public static ArrayList<StringBuilder> list = new ArrayList<>();
+    public static ArrayList<String> list = new ArrayList<>();
     public static StringBuilder word = new StringBuilder();
 
 
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                             if (i != count - 1) {
                                 word.append(", ");
                             }
-                            list.add(word);
+                            list.add(WORDS[x]);
                             i++;
                         }
                     }
