@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkPermissions() {
 
+//        NEED TO FIX THIS CHECK HERE
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -96,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_EXTERNAL_STORAGE
             }, WRITE_EXTERNAL_STORAGE);
 
+        }else {
+            CAN_READ_EXTERNAL_STORAGE = true;
+            CAN_WRITE_EXTERNAL_STORAGE = true;
+            CAN_READ_CONTACTS = true;
         }
     }
 

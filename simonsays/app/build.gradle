@@ -36,9 +36,15 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.google.android.gms:play-services:9.8.0'
 
+//    For volley
+    compile 'com.android.volley:volley:1.0.0'
+
+
 //    Multidex dependency
     compile 'com.android.support:multidex:1.0.0'
 
+//    Android compile service
+    compile 'net.gotev:uploadservice:2.1'
 
     testCompile 'junit:junit:4.12'
 }
