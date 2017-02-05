@@ -34,6 +34,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
+    compile 'com.clarifai.clarifai-api2:core:2.1.0'
     compile 'com.google.android.gms:play-services:9.8.0'
 
 //    For volley
@@ -42,6 +43,7 @@ dependencies {
 
 //    Multidex dependency
     compile 'com.android.support:multidex:1.0.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.4'
 
 //    Android compile service
     compile 'net.gotev:uploadservice:2.1'

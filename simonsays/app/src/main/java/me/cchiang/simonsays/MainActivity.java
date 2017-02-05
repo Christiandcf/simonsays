@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,11 +58,16 @@ public class MainActivity extends AppCompatActivity {
     public static boolean CAN_WRITE_EXTERNAL_STORAGE = false;
     public static boolean CAN_READ_EXTERNAL_STORAGE = false;
 
+    private static int count = 0;
+    public static ArrayList<String> list = new ArrayList<>();
+    public static StringBuilder word = new StringBuilder();
+
+
 
     Button startBtn, pictureBtn;
     CheckBox one, three, friends;
     Random rn = new Random(System.currentTimeMillis());
-    String WORDS[] = {"chair","table","person", "water", "bottle", "animal", "bird"};
+    String WORDS[] = {"chair","table","person", "water", "bottle", "animal", "drink", "box", "machine", "computer", "person"};
 
 
     @Override
@@ -70,7 +76,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // This will access the random button
-        generateRandom();
+//        if(one.isChecked()|| three.isChecked()) {
+            generateRandom();
+//        }
+
 
         // change to picture Layout
         pictureBtn = (Button) findViewById(R.id.pictureBtn);
@@ -138,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void generateRandom(){
 
-
         startBtn = (Button) findViewById(R.id.startBtn);
         one =(CheckBox)findViewById(R.id.box1);
         three =(CheckBox)findViewById(R.id.box3);
@@ -147,39 +155,45 @@ public class MainActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Integer> list = new ArrayList<>();
-                int count = 0;
-                StringBuilder word = new StringBuilder();
-                word.append("Find: ");
-                if (one.isChecked()){
-                    count = 1;
-                }else if(three.isChecked()){
-                    count = 3;
-                }
-                for(int i = 0; i < count; ){
-                    int x = rn.nextInt(7);
-                    if(!list.contains(x)){
-                        word.append(WORDS[x]);
-                        if(i != count - 1){
-                            word.append(", ");
-                        }
-                        list.add(x);
-                        i++;
+                if((one.isChecked() && !(three.isChecked())) || (!(one.isChecked()) && three.isChecked())){
+                    list = new ArrayList<>();
+                    word.append("Find: ");
+
+                    if (one.isChecked()) {
+                        count = 1;
+                    } else if (three.isChecked()) {
+                        count = 3;
                     }
+
+                    for (int i = 0; i < count; ) {
+                        int x = rn.nextInt(7);
+                        if (!list.contains(WORDS[x])) {
+                            word.append(WORDS[x]);
+                            if (i != count - 1) {
+                                word.append(", ");
+                            }
+                            list.add(WORDS[x]);
+                            i++;
+                        }
+                    }
+
+                    TextView randomView = (TextView) findViewById(R.id.randomView);
+                    randomView.setText(word + "!");
+                    System.out.println("word is: " + word);
+
+
+                    if (friends.isChecked()) {
+                        Toast.makeText(MainActivity.this, "You sure you got friends...?", Toast.LENGTH_SHORT).show();
+                    }
+
+                    one.setEnabled(false);
+                    three.setEnabled(false);
+                    friends.setEnabled(false);
+                    startBtn.setEnabled(false);
+                    pictureBtn.setEnabled(true);
+                }else if(one.isChecked() && three.isChecked()){
+                    Toast.makeText(MainActivity.this, "Choose one only plz", Toast.LENGTH_SHORT).show();
                 }
-
-                TextView randomView = (TextView)findViewById(R.id.randomView);
-                randomView.setText(word + "!");
-                System.out.println("word is: " + word);
-
-
-                if(friends.isChecked()){
-                    Toast.makeText(MainActivity.this, "You sure you got friends...?", Toast.LENGTH_SHORT).show();
-                }
-
-                one.setEnabled(false);
-                three.setEnabled(false);
-                friends.setEnabled(false);
 
 
             }
