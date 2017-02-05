@@ -2,9 +2,6 @@
 
 package me.cchiang.simonsays;
 
-
-import android.graphics.Picture;
-import android.net.http.RequestQueue;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.net.http.RequestQueue;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,21 +24,10 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import net.gotev.uploadservice.MultipartUploadRequest;
-import net.gotev.uploadservice.UploadNotificationConfig;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -61,8 +46,6 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
-import static android.R.attr.bitmap;
-import static android.R.attr.thumbnail;
 import clarifai2.api.ClarifaiBuilder;
 import clarifai2.api.ClarifaiClient;
 import clarifai2.api.ClarifaiResponse;
@@ -72,23 +55,18 @@ import clarifai2.dto.model.ConceptModel;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import static android.R.id.list;
 import static android.app.Activity.RESULT_OK;
-import static android.os.Build.VERSION_CODES.M;
-import static com.android.volley.Request.Method.HEAD;
 
 public class PictureActivity extends AppCompatActivity {
-
-    private static final int CAMERA_REQUEST = 1888;
-    private EditText editText;
-    private Uri selectedImage;
-
-    String encodedImage;
-
-    ImageView mimageView;
-
-
-    Bitmap photo;
 
     private static final int READ_CONTACTS = 1000;
     private static final int WRITE_EXTERNAL_STORAGE = 1001;
@@ -98,6 +76,9 @@ public class PictureActivity extends AppCompatActivity {
     public static boolean CAN_WRITE_EXTERNAL_STORAGE = false;
     public static boolean CAN_READ_EXTERNAL_STORAGE = false;
 
+//    Remove eventually
+    private static final int CAMERA_REQUEST = 1888;
+
 
     private ImageButton cameraButton;
     private TextView head;
@@ -106,6 +87,11 @@ public class PictureActivity extends AppCompatActivity {
     private ArrayList<String> checkList = MainActivity.list;
     private ArrayList<String> leftList = new ArrayList<>();
 
+//    Remove eventually
+    String encodedImage;
+    ImageView mimageView;
+    Bitmap photo;
+    private Uri selectedImage;
 
     private final ClarifaiClient clarifaiClient = new ClarifaiBuilder(Credential.CLIENT_ID,
             Credential.CLIENT_SECRET).buildSync();
@@ -117,20 +103,21 @@ public class PictureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
+
+
         getViews();
         head.setText(MainActivity.word);
         handleCameraBtnClick();
         checkPermissions();
 
         mimageView = (ImageView) this.findViewById(R.id.picture);
-//        ImageButton button = (ImageButton) this.findViewById(R.id.cameraButton);
-
 
         for (int i = 0 ; i < checkList.size(); i++){
             String temp = checkList.get(i);
             leftList.add(temp);
         }
     }
+
 
     private void checkPermissions() {
 
@@ -208,36 +195,6 @@ public class PictureActivity extends AppCompatActivity {
     }
 
 
-        // Checks if the words matches
-    public void checkMatch(){
-        String looking = "You got: ";
-
-        // Check for matches and remove match form leftList
-        for(int i = 0; i < 10; i++) {
-            if(checkList.contains(tags.get(i))){
-                looking += "\n" + tags.get(i);
-                leftList.remove(tags.get(i));
-            }
-        }
-
-        looking += "\n Still Needs:";
-
-        // Displays whats lefts
-        for(int j = 0; j < leftList.size(); j++){
-            looking += "\n" + leftList.get(j);
-        }
-
-        checkText.setText(looking);
-
-        // If list if empty you win...
-        if(leftList.isEmpty()){
-            Toast.makeText(this, "I'M PROUD OF YOU", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(PictureActivity.this, Winning.class);
-            startActivity(intent);
-        }
-
-    }
-
     /**
      * Clears tag values, tag TextView, and preview ImageView
      */
@@ -251,24 +208,51 @@ public class PictureActivity extends AppCompatActivity {
      * Prints the first 10 tags for an image
      */
     public void printTags() {
-        String results = "Matches: ";
+        String results = "TAGS: ";
         for(int i = 0; i < 10; i++) {
             results += "\n" + tags.get(i);
         }
         tagText.setText(results);
     }
 
+    // Checks if the words matches
+    public void checkMatch(){
+        String looking = "MATCHED: ";
+
+        // Check for matches and remove match form leftList
+        for(int i = 0; i < 10; i++) {
+            if(checkList.contains(tags.get(i))){
+                looking += "\n" + tags.get(i);
+                leftList.remove(tags.get(i));
+            }
+        }
+
+        looking += "\n\n NEEDS:";
+
+        // Displays whats lefts
+        for(int j = 0; j < leftList.size(); j++){
+            looking += "\n" + leftList.get(j);
+        }
+
+        checkText.setText(looking);
+
+        // If list if empty you win...
+        if(leftList.isEmpty()){
+//            Toast.makeText(this, "I'M PROUD OF YOU", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PictureActivity.this, Winning.class);
+            startActivity(intent);
+        }
+
+    }
+
+
+    //                THIS BLOCK IS THE SERVER UPLOADING CODE  *****************************************
     public String toBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream .toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
-
-
-
-
-
 
 
     public void uploadToServer() {
@@ -337,12 +321,11 @@ public class PictureActivity extends AppCompatActivity {
 
     }
 
-
+    //                THIS BLOCK IS THE SERVER UPLOADING CODE  *****************************************
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        InputStream inStream = null;
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -354,9 +337,11 @@ public class PictureActivity extends AppCompatActivity {
 
         }
 
+        //        InputStream inStream = null;
+
+
         //check if image was collected successfully
-        if ((requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
-                requestCode == GALLERY_IMAGE_ACTIVITY_REQUEST_CODE ) &&
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE &&
                 resultCode == RESULT_OK) {
 //                inStream = getContentResolver().openInputStream(data.getData());
 //                Bitmap bitmap = BitmapFactory.decodeStream(inStream);
@@ -377,6 +362,9 @@ public class PictureActivity extends AppCompatActivity {
                             .withInputs(ClarifaiInput.forImage(ClarifaiImage.of(byteArray)))
                             .executeSync();
                 }
+
+
+
 
                 // Handling API response and then collecting and printing tags
                 @Override
