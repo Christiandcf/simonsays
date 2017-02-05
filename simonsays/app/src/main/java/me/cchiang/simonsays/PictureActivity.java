@@ -270,12 +270,12 @@ public class PictureActivity extends AppCompatActivity {
                             int responseCode = Integer.parseInt(jsonObject.getString("responseCode"));
                             String response = jsonObject.getString("response");
                             if (responseCode == 1) {
-                                Toast.makeText(PictureActivity.this, response, Toast.LENGTH_LONG).show();
+//                                Toast.makeText(PictureActivity.this, response, Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(PictureActivity.this, "Error: " + response, Toast.LENGTH_LONG).show();
+//                                Toast.makeText(PictureActivity.this, "Error: " + response, Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception ex) {
-                            Toast.makeText(PictureActivity.this, "Failed to upload.", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(PictureActivity.this, "Failed to upload.", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -291,12 +291,12 @@ public class PictureActivity extends AppCompatActivity {
                             int responseCode = Integer.parseInt(jsonObject.getString("responseCode"));
                             String response = jsonObject.getString("response");
                             if (responseCode == 1) {
-                                Toast.makeText(PictureActivity.this, response, Toast.LENGTH_LONG).show();
+//                                Toast.makeText(PictureActivity.this, response, Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(PictureActivity.this, "Error: " + response, Toast.LENGTH_LONG).show();
+//                                Toast.makeText(PictureActivity.this, "Error: " + response, Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception ex) {
-                            Toast.makeText(PictureActivity.this, "Failed to upload.", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(PictureActivity.this, "Failed to upload.", Toast.LENGTH_LONG).show();
                         }
                     }
                 }){
