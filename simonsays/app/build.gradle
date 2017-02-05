@@ -3,6 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+//    For NumValuePair
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "me.cchiang.simonsays"
         minSdkVersion 23
@@ -10,8 +12,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        Multidex
         multiDexEnabled true
     }
+//    For multidex
     dexOptions {
         javaMaxHeapSize "4g"
     }
@@ -31,6 +35,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
     compile 'com.google.android.gms:play-services:9.8.0'
+
+//    Multidex dependency
     compile 'com.android.support:multidex:1.0.0'
+
+
     testCompile 'junit:junit:4.12'
 }
