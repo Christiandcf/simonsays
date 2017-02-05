@@ -27,14 +27,7 @@ public class MainActivity extends AppCompatActivity {
         // This will access the random button
         generateRandom();
 
-//        startBtn = (Button) findViewById(R.id.startBtn);
-//        startBtn.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                Toast.makeText(MainActivity.this, "start", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
+        // change to picture Layout
         pictureBtn = (Button) findViewById(R.id.pictureBtn);
         pictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
