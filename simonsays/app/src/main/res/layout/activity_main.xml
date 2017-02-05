@@ -10,17 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="me.cchiang.simonsays.MainActivity">
 
-    <Button
-        android:text="Start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="19dp"
-        android:id="@+id/startBtn" />
-
     <CheckBox
         android:text="1 WORD"
+        android:enabled="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/box1"
@@ -30,6 +22,7 @@
 
     <CheckBox
         android:text="3 WORDS"
+        android:enabled="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/box3"
@@ -39,10 +32,37 @@
 
     <CheckBox
         android:text="FRIENDS"
+        android:enabled="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/boxFriends"
         android:layout_alignBaseline="@+id/box3"
         android:layout_alignBottom="@+id/box3"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/startBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="171dp"
+        android:id="@+id/randomView" />
+
+    <Button
+        android:text="Start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="63dp"
+        android:id="@+id/startBtn"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/box3" />
+
+    <Button
+        android:text="Oh yeah Baby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pictureBtn"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
