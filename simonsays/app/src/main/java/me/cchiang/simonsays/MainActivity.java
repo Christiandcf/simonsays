@@ -17,12 +17,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Pair;
@@ -45,9 +47,26 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
+//FIREBASE IMPORTS
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+//FIREBASE IMPORTS END
+
+
 import static android.os.Build.VERSION_CODES.N;
 
 public class MainActivity extends AppCompatActivity {
+
+//    FIREBASE VARIABLES
+    private ProgressBar progressBar;
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
+    //get current user
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//    END FIREBASE VARIABLES
 
 
     private static final int READ_CONTACTS = 1000;
@@ -74,6 +93,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+//        FIREBASE STUFF
+
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbar.setTitle(getString(R.string.app_name));
+//        setSupportActionBar(toolbar);
+
+        //get firebase auth instance
+        auth = FirebaseAuth.getInstance();
+
+
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
+
+//        END FIREBASE STUFF
+
+
 
             count = 0;
             list = new ArrayList<>();
@@ -198,6 +252,38 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+//    FIREBASE METHODS
+
+    //sign out method
+    public void signOut() {
+        auth.signOut();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(progressBar != null){
+            progressBar.setVisibility(View.GONE);
+
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener);
+        }
+    }
+
+//    FIREBASE METHODS
 
 
 }

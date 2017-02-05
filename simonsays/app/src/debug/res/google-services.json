@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "668196539437",
+    "firebase_url": "https://simonsays-57c45.firebaseio.com",
+    "project_id": "simonsays-57c45",
+    "storage_bucket": "simonsays-57c45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:668196539437:android:73f326e072a5aa77",
+        "android_client_info": {
+          "package_name": "me.cchiang.simonsays"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "668196539437-16183jvg4ob6663m5hm6jec1ev539euo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdDBWmkhrPG9SZhOlJwgG3pZN8nXblfY4"
+        },
+        {
+          "current_key": "AIzaSyD0HojBPLca7ptagXTAgICq6UkIbwy0nsk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "668196539437-16183jvg4ob6663m5hm6jec1ev539euo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

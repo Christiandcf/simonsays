@@ -246,7 +246,9 @@ public class PictureActivity extends AppCompatActivity {
     }
 
 
-    //                THIS BLOCK IS THE SERVER UPLOADING CODE  *****************************************
+    //   THIS BLOCK IS THE SERVER UPLOADING CODE  *****************************************
+
+
     public String toBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -321,7 +323,7 @@ public class PictureActivity extends AppCompatActivity {
 
     }
 
-    //                THIS BLOCK IS THE SERVER UPLOADING CODE  *****************************************
+    //   THIS ENDS THE BLOCK FOR THE SERVER UPLOADING CODE  *****************************************
 
 
     @Override

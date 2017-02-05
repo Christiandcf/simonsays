@@ -14,6 +14,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+
+    <!--FIREBASE PERMISSIONS-->
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
+
+    <!--END FIREBASE PERMISSIONS-->
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -24,13 +33,45 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <!--<activity android:name=".MainActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--FIREBASE ACTIVITIES-->
+
+        <activity
+            android:name=".SignupActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:label="@string/title_activity_reset_password"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!--END FIREBASE ACTIVITIES-->
+
+
         <activity
             android:name=".PictureActivity"
             android:label="@string/title_activity_picture"
