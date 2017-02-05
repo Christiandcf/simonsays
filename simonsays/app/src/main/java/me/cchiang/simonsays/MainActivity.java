@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    FloatingActionButton logOutBtn;
     Button startBtn, pictureBtn;
     CheckBox one, three, friends;
     Random rn = new Random(System.currentTimeMillis());
@@ -135,6 +137,13 @@ public class MainActivity extends AppCompatActivity {
 
             generateRandom();
 
+
+        FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.logOutBtn);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                signOut();
+            }
+        });
 
         // change to picture Layout
         pictureBtn = (Button) findViewById(R.id.pictureBtn);
