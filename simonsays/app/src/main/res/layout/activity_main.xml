@@ -13,6 +13,7 @@
 
     <CheckBox
         android:text="1 WORD"
+        android:enabled="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/box1"
@@ -22,6 +23,7 @@
 
     <CheckBox
         android:text="3 WORDS"
+        android:enabled="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/box3"
@@ -31,6 +33,7 @@
 
     <CheckBox
         android:text="FRIENDS"
+        android:enabled="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/boxFriends"
@@ -59,7 +62,7 @@
         android:text="Oh yeah Baby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cameraBtn"
+        android:id="@+id/pictureBtn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

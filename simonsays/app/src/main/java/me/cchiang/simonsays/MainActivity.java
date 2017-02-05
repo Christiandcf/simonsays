@@ -14,11 +14,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    Button startBtn;
+    Button startBtn, pictureBtn;
     CheckBox one, three, friends;
     Random rn = new Random(System.currentTimeMillis());
     String WORDS[] = {"chair","table","person", "water", "bottle", "animal", "bird"};
-    ArrayList<Integer> list=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +25,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // This will access the random button
-        addListenerOnButtonClick();
+        generateRandom();
+
+//        startBtn = (Button) findViewById(R.id.startBtn);
+//        startBtn.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Toast.makeText(MainActivity.this, "start", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        pictureBtn = (Button) findViewById(R.id.pictureBtn);
+        pictureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PictureActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
 
-    public void addListenerOnButtonClick(){
+    public void generateRandom(){
 
 
         startBtn = (Button) findViewById(R.id.startBtn);
@@ -42,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<Integer> list = new ArrayList<>();
                 int count = 0;
                 StringBuilder word = new StringBuilder();
                 word.append("Find: ");
-//                Toast.makeText(MainActivity.this, "Button Clicked", Toast.LENGTH_SHORT).show();
                 if (one.isChecked()){
                     count = 1;
                 }else if(three.isChecked()){
@@ -54,27 +70,33 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i < count; ){
                     int x = rn.nextInt(7);
                     if(!list.contains(x)){
-                        word.append(WORDS[x] + " ");
+                        word.append(WORDS[x]);
+                        if(i != count - 1){
+                            word.append(", ");
+                        }
                         list.add(x);
                         i++;
                     }
-
                 }
 
-                setContentView(R.layout.activity_main);
                 TextView randomView = (TextView)findViewById(R.id.randomView);
                 randomView.setText(word + "!");
-
+                System.out.println("word is: " + word);
 
 
                 if(friends.isChecked()){
-                    Toast.makeText(MainActivity.this, "You sure you got friends...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "You sure you got friends...?", Toast.LENGTH_SHORT).show();
                 }
 
-//                Intent intent = new Intent(MainActivity.this, PictureActivity.class);
-//                startActivity(intent);
+                one.setEnabled(false);
+                three.setEnabled(false);
+                friends.setEnabled(false);
+
+
             }
         });
+
+
     }
 
 

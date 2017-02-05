@@ -11,15 +11,15 @@ import android.widget.Button;
 
 public class PictureActivity extends AppCompatActivity {
 
-    Button homeBtn;
+    Button cameraBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
 
-        homeBtn = (Button) findViewById(R.id.homeBtn);
+        cameraBtn = (Button) findViewById(R.id.cameraBtn);
 
-        homeBtn.setOnClickListener(new View.OnClickListener() {
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PictureActivity.this, MainActivity.class);
