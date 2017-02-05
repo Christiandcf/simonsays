@@ -59,15 +59,15 @@ public class MainActivity extends AppCompatActivity {
     public static boolean CAN_READ_EXTERNAL_STORAGE = false;
 
     private static int count = 0;
-    public static ArrayList<String> list;
-    public static StringBuilder word;
+    public static ArrayList<String> list = new ArrayList<>();
+    public static StringBuilder word = new StringBuilder();
 
 
 
     Button startBtn, pictureBtn;
     CheckBox one, three, friends;
     Random rn = new Random(System.currentTimeMillis());
-    String WORDS[] = {"chair","table","person" , "bottle", "animal", "drink", "adult", "laptop", "telephone", "computer", "person"};
+    String WORDS[] = {"chair","table","person", "water", "bottle", "animal", "drink", "box", "machine", "computer", "person"};
 
 
     @Override
@@ -75,11 +75,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-            count = 0;
-            list = new ArrayList<>();
-            word = new StringBuilder();
-
+        // This will access the random button
+//        if(one.isChecked()|| three.isChecked()) {
             generateRandom();
+//        }
 
 
         // change to picture Layout
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkPermissions() {
 
+//        NEED TO FIX THIS CHECK HERE
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -106,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_EXTERNAL_STORAGE
             }, WRITE_EXTERNAL_STORAGE);
 
+        }else {
+            CAN_READ_EXTERNAL_STORAGE = true;
+            CAN_WRITE_EXTERNAL_STORAGE = true;
+            CAN_READ_CONTACTS = true;
         }
     }
 
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         startBtn = (Button) findViewById(R.id.startBtn);
         one =(CheckBox)findViewById(R.id.box1);
         three =(CheckBox)findViewById(R.id.box3);
+        friends =(CheckBox)findViewById(R.id.boxFriends);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     for (int i = 0; i < count; ) {
-                        int x = rn.nextInt(WORDS.length);
+                        int x = rn.nextInt(7);
                         if (!list.contains(WORDS[x])) {
                             word.append(WORDS[x]);
                             if (i != count - 1) {
@@ -177,14 +182,17 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("word is: " + word);
 
 
+                    if (friends.isChecked()) {
+                        Toast.makeText(MainActivity.this, "You sure you got friends...?", Toast.LENGTH_SHORT).show();
+                    }
+
                     one.setEnabled(false);
                     three.setEnabled(false);
+                    friends.setEnabled(false);
                     startBtn.setEnabled(false);
                     pictureBtn.setEnabled(true);
-                }else if((one.isChecked() && three.isChecked())){
+                }else if(one.isChecked() && three.isChecked()){
                     Toast.makeText(MainActivity.this, "Choose one only plz", Toast.LENGTH_SHORT).show();
-                }else if(!one.isChecked() && !three.isChecked()){
-                    Toast.makeText(MainActivity.this, "Choose one plz", Toast.LENGTH_SHORT).show();
                 }
 
 

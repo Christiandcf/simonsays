@@ -2,6 +2,9 @@
 
 package me.cchiang.simonsays;
 
+
+import android.graphics.Picture;
+import android.net.http.RequestQueue;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.net.http.RequestQueue;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,15 +23,28 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
+
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
@@ -44,6 +61,8 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
+import static android.R.attr.bitmap;
+import static android.R.attr.thumbnail;
 import clarifai2.api.ClarifaiBuilder;
 import clarifai2.api.ClarifaiClient;
 import clarifai2.api.ClarifaiResponse;
@@ -55,8 +74,21 @@ import clarifai2.dto.prediction.Concept;
 
 import static android.R.id.list;
 import static android.app.Activity.RESULT_OK;
+import static android.os.Build.VERSION_CODES.M;
+import static com.android.volley.Request.Method.HEAD;
 
 public class PictureActivity extends AppCompatActivity {
+
+    private static final int CAMERA_REQUEST = 1888;
+    private EditText editText;
+    private Uri selectedImage;
+
+    String encodedImage;
+
+    ImageView mimageView;
+
+
+    Bitmap photo;
 
     private static final int READ_CONTACTS = 1000;
     private static final int WRITE_EXTERNAL_STORAGE = 1001;
@@ -79,17 +111,20 @@ public class PictureActivity extends AppCompatActivity {
             Credential.CLIENT_SECRET).buildSync();
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    private static final int GALLERY_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
-
-
         getViews();
         head.setText(MainActivity.word);
         handleCameraBtnClick();
         checkPermissions();
+
+        mimageView = (ImageView) this.findViewById(R.id.picture);
+//        ImageButton button = (ImageButton) this.findViewById(R.id.cameraButton);
+
 
         for (int i = 0 ; i < checkList.size(); i++){
             String temp = checkList.get(i);
@@ -97,12 +132,17 @@ public class PictureActivity extends AppCompatActivity {
         }
     }
 
-
     private void checkPermissions() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
+            if(MainActivity.CAN_WRITE_EXTERNAL_STORAGE){
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImage);
+                cameraIntent.putExtra("return-data", true);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
             ActivityCompat.requestPermissions(this,new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_CONTACTS,
@@ -168,6 +208,36 @@ public class PictureActivity extends AppCompatActivity {
     }
 
 
+        // Checks if the words matches
+    public void checkMatch(){
+        String looking = "You got: ";
+
+        // Check for matches and remove match form leftList
+        for(int i = 0; i < 10; i++) {
+            if(checkList.contains(tags.get(i))){
+                looking += "\n" + tags.get(i);
+                leftList.remove(tags.get(i));
+            }
+        }
+
+        looking += "\n Still Needs:";
+
+        // Displays whats lefts
+        for(int j = 0; j < leftList.size(); j++){
+            looking += "\n" + leftList.get(j);
+        }
+
+        checkText.setText(looking);
+
+        // If list if empty you win...
+        if(leftList.isEmpty()){
+            Toast.makeText(this, "I'M PROUD OF YOU", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PictureActivity.this, Winning.class);
+            startActivity(intent);
+        }
+
+    }
+
     /**
      * Clears tag values, tag TextView, and preview ImageView
      */
@@ -181,49 +251,112 @@ public class PictureActivity extends AppCompatActivity {
      * Prints the first 10 tags for an image
      */
     public void printTags() {
-        String results = "TAGS: ";
+        String results = "Matches: ";
         for(int i = 0; i < 10; i++) {
             results += "\n" + tags.get(i);
         }
         tagText.setText(results);
     }
 
-    // Checks if the words matches
-    public void checkMatch(){
-        String looking = "MATCHED: ";
+    public String toBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
 
-        // Check for matches and remove match form leftList
-        for(int i = 0; i < 10; i++) {
-            if(checkList.contains(tags.get(i))){
-                looking += "\n" + tags.get(i);
-                leftList.remove(tags.get(i));
+
+
+
+
+
+
+    public void uploadToServer() {
+
+        final ProgressDialog loading = ProgressDialog.show(PictureActivity.this,"Uploading...","Please wait...",false,false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.UPLOAD_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        //Dismissing the progress dialog
+                        loading.dismiss();
+                        //Showing toast message of the response
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            int responseCode = Integer.parseInt(jsonObject.getString("responseCode"));
+                            String response = jsonObject.getString("response");
+                            if (responseCode == 1) {
+                                Toast.makeText(PictureActivity.this, response, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(PictureActivity.this, "Error: " + response, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception ex) {
+                            Toast.makeText(PictureActivity.this, "Failed to upload.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Dismissing the progress dialog
+                        loading.dismiss();
+
+                        //Showing toast
+                        try {
+                            JSONObject jsonObject = new JSONObject(volleyError.getMessage());
+                            int responseCode = Integer.parseInt(jsonObject.getString("responseCode"));
+                            String response = jsonObject.getString("response");
+                            if (responseCode == 1) {
+                                Toast.makeText(PictureActivity.this, response, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(PictureActivity.this, "Error: " + response, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception ex) {
+                            Toast.makeText(PictureActivity.this, "Failed to upload.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //Creating parameters
+                Map<String,String> params = new Hashtable<>();
+
+                params.put("base64", encodedImage);
+
+                //returning parameters
+                return params;
             }
-        }
+        };
 
-        looking += "\n\n NEEDS:";
+        //Creating a Request Queue
+        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        // Displays whats lefts
-        for(int j = 0; j < leftList.size(); j++){
-            looking += "\n" + leftList.get(j);
-        }
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
 
-        checkText.setText(looking);
-
-        // If list if empty you win...
-        if(leftList.isEmpty()){
-//            Toast.makeText(this, "I'M PROUD OF YOU", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(PictureActivity.this, Winning.class);
-            startActivity(intent);
-        }
 
     }
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        InputStream inStream = null;
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            encodedImage = toBase64(photo);
+            System.out.println(encodedImage);
+            uploadToServer();
+
+        }
 
         //check if image was collected successfully
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE &&
+        if ((requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
+                requestCode == GALLERY_IMAGE_ACTIVITY_REQUEST_CODE ) &&
                 resultCode == RESULT_OK) {
 //                inStream = getContentResolver().openInputStream(data.getData());
 //                Bitmap bitmap = BitmapFactory.decodeStream(inStream);
