@@ -72,6 +72,8 @@ public class PictureActivity extends AppCompatActivity {
     private TextView tagText, checkText;
     private ArrayList<String> tags = new ArrayList<>();
     private ArrayList<String> checkList = MainActivity.list;
+    private ArrayList<String> leftList = new ArrayList<>();
+
 
     private final ClarifaiClient clarifaiClient = new ClarifaiBuilder(Credential.CLIENT_ID,
             Credential.CLIENT_SECRET).buildSync();
@@ -87,6 +89,11 @@ public class PictureActivity extends AppCompatActivity {
         head.setText(MainActivity.word);
         handleCameraBtnClick();
         checkPermissions();
+
+        for (int i = 0 ; i < checkList.size(); i++){
+            String temp = checkList.get(i);
+            leftList.add(temp);
+        }
     }
 
     private void checkPermissions() {
@@ -185,9 +192,21 @@ public class PictureActivity extends AppCompatActivity {
         for(int i = 0; i < 10; i++) {
             if(checkList.contains(tags.get(i))){
                 looking += "\n" + tags.get(i);
+                leftList.remove(tags.get(i));
             }
         }
+        looking += "\n Still Needs:";
+
+        for(int j = 0; j < leftList.size(); j++){
+            looking += "\n" + leftList.get(j);
+        }
+
         checkText.setText(looking);
+
+        if(leftList.isEmpty()){
+            Toast.makeText(this, "I'M PROUD OF YOU MOTHERFUCKER", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
