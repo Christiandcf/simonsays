@@ -39,6 +39,7 @@ dependencies {
 
 //    Multidex dependency
     compile 'com.android.support:multidex:1.0.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.4'
 
 
     testCompile 'junit:junit:4.12'

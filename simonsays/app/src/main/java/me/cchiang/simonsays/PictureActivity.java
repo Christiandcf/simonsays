@@ -186,9 +186,11 @@ public class PictureActivity extends AppCompatActivity {
         tagText.setText(results);
     }
 
+    // Checks if the words matches
     public void checkMatch(){
         String looking = "You got: ";
 
+        // Check for matches and remove match form leftList
         for(int i = 0; i < 10; i++) {
             if(checkList.contains(tags.get(i))){
                 looking += "\n" + tags.get(i);
@@ -197,14 +199,18 @@ public class PictureActivity extends AppCompatActivity {
         }
         looking += "\n Still Needs:";
 
+        // Displays whats lefts
         for(int j = 0; j < leftList.size(); j++){
             looking += "\n" + leftList.get(j);
         }
 
         checkText.setText(looking);
 
+        // If list if empty you win...
         if(leftList.isEmpty()){
-            Toast.makeText(this, "I'M PROUD OF YOU MOTHERFUCKER", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "I'M PROUD OF YOU", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PictureActivity.this, Winning.class);
+            startActivity(intent);
         }
 
     }
