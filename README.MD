@@ -4,11 +4,11 @@ Simons Says is a scavenger hunting game for your Android smartphone. You will be
 
 
 ## Screenshots
-
-![Screenshot](screenshots/mainScreen.png)
-
-![Screenshot](screenshots/results.png)
-
+<br>
+<img height="700" src="screenshots/main.png"/>
+<br>
+<img height="700" src="screenshots/results.png"/>
+<br>
 
 ## Authors
 - Christian Chiang (cdcf@iastate.edu)
