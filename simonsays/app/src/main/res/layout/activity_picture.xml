@@ -10,15 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="me.cchiang.simonsays.MainActivity">
 
-    <TextView
-        android:id="@+id/head"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:text="@string/choose_picture" />
-
 
     <TextView
         android:id="@+id/chooseItemsText"
@@ -33,7 +24,15 @@
         android:id="@+id/tag_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/picture" />
+        android:layout_below="@id/picture"
+        android:layout_toStartOf="@+id/picture" />
+
+    <TextView
+        android:id="@+id/check_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/picture"
+        android:layout_toEndOf="@+id/buttonLayout" />
 
     <LinearLayout
         android:id="@+id/buttonLayout"
@@ -46,6 +45,13 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <ImageButton
         android:id="@+id/cameraButton"
         android:layout_width="wrap_content"
@@ -53,14 +59,15 @@
         android:layout_marginRight="@dimen/between_buttons"
         android:background="@drawable/camera"
         android:clickable="true"
-        android:layout_below="@+id/buttonLayout"
+        android:layout_alignTop="@+id/buttonLayout"
         android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/head"
-        android:layout_alignParentStart="true" />
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/cameraButton"
+        android:layout_toEndOf="@+id/buttonLayout" />
 
 </RelativeLayout>

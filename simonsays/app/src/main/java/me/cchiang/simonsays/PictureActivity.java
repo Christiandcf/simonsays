@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,6 +53,7 @@ import clarifai2.dto.model.ConceptModel;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
+import static android.R.id.list;
 import static android.app.Activity.RESULT_OK;
 
 public class PictureActivity extends AppCompatActivity {
@@ -65,8 +68,10 @@ public class PictureActivity extends AppCompatActivity {
 
 
     private ImageButton cameraButton;
-    private TextView tagText;
+    private TextView head;
+    private TextView tagText, checkText;
     private ArrayList<String> tags = new ArrayList<>();
+    private ArrayList<StringBuilder> checkList = MainActivity.list;
 
     private final ClarifaiClient clarifaiClient = new ClarifaiBuilder(Credential.CLIENT_ID,
             Credential.CLIENT_SECRET).buildSync();
@@ -79,6 +84,7 @@ public class PictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
         getViews();
+        head.setText(MainActivity.word);
         handleCameraBtnClick();
         checkPermissions();
     }
@@ -134,7 +140,9 @@ public class PictureActivity extends AppCompatActivity {
      */
     public void getViews() {
         cameraButton = (ImageButton) findViewById(R.id.cameraButton);
+        head = (TextView) findViewById(R.id.head);
         tagText = (TextView) findViewById(R.id.tag_text);
+        checkText = (TextView) findViewById(R.id.check_text);
     }
 
     /**
@@ -164,16 +172,22 @@ public class PictureActivity extends AppCompatActivity {
      * Prints the first 10 tags for an image
      */
     public void printTags() {
-        String results = "First 10 tags: ";
+        String results = "Matches: ";
         for(int i = 0; i < 10; i++) {
             results += "\n" + tags.get(i);
         }
         tagText.setText(results);
+
+        String looking = "Need: ";
+        for(int j = 0; j < checkList.size(); j++){
+            looking += "\n" + checkList.get(j);
+        }
+        checkText.setText(looking);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        InputStream inStream = null;
+//        InputStream inStream = null;
 
         //check if image was collected successfully
         if ((requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
