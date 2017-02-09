@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     Button startBtn, pictureBtn;
     CheckBox one, three, friends;
     Random rn = new Random(System.currentTimeMillis());
-    String WORDS[] = {"chair","table","person" , "bottle", "animal", "drink", "adult", "laptop", "telephone", "computer", "person"};
+    String WORDS[] = {"chair","table","person" , "bottle", "animal", "drink", "adult", "laptop", "telephone", "computer"};
 
 
     @Override
